@@ -1,0 +1,83 @@
+---
+
+mongodb_package: mongodb-org
+mongodb_apt_key_url: http://docs.mongodb.org/10gen-gpg-key.asc
+mongodb_apt_key_id: 7F0CEB10
+mongodb_force_wait_for_port: false
+mongodb_pymongo_from_pip: false                   # Install latest PyMongo via PIP or package manager
+mongodb_disable_thp: true
+
+mongodb_manage_service: true
+
+mongodb_user: mongodb
+mongodb_uid:
+mongodb_gid:
+mongodb_daemon_name: "{{ 'mongod' if ('mongodb-org' in mongodb_package) else 'mongodb' }}"
+
+mongodb_conf_auth: false                          # Run with security
+mongodb_conf_bind_ip: 127.0.0.1                   # Comma separated list of ip addresses to listen on
+mongodb_conf_cpu: true                            # Periodically show cpu and iowait utilization
+mongodb_conf_dbpath: /data/db                     # Directory for datafiles
+mongodb_conf_fork: false                          # Fork server process
+mongodb_conf_httpinterface: false                 # Enable http interface
+mongodb_conf_ipv6: false                          # Enable IPv6 support (disabled by default)
+mongodb_conf_journal: true                        # Enable journaling
+mongodb_conf_logappend: true                      # Append to logpath instead of over-writing
+mongodb_conf_logpath: /var/log/mongodb/{{ mongodb_daemon_name }}.log # Log file to send write to instead of stdout
+mongodb_conf_maxConns: 1000000                    # Max number of simultaneous connections
+mongodb_conf_noprealloc: false                    # Disable data file preallocation
+mongodb_conf_smallfiles: false                    # Disable smallfiles option
+mongodb_conf_noscripting: false                   # Disable scripting engine
+mongodb_conf_notablescan: false                   # Do not allow table scans
+mongodb_conf_port: 27017                          # Specify port number
+mongodb_conf_quota: false                         # Limits each database to a certain number of files
+mongodb_conf_quotaFiles: 8                        # Number of quota files
+
+# Replica set options:
+mongodb_conf_replSet:                             # Enable replication <setname>[/<optionalseedhostlist>]
+mongodb_conf_replIndexPrefetch: "all"             # specify index prefetching behavior (if secondary) [none|_id_only|all]
+mongodb_conf_oplogSize: 512                       # specifies a maximum size in megabytes for the replication operation log
+mongodb_conf_keyFile: /etc/mongodb-keyfile        # Specify path to keyfile with password for inter-process authentication
+
+# MMS Agent
+mongodb_mms_agent_pkg: https://mms.mongodb.com/download/agent/automation/mongodb-mms-automation-agent-manager_1.4.2.783-1_amd64.deb
+mongodb_mms_group_id: ""
+mongodb_mms_api_key: ""
+mongodb_mms_base_url: https://mms.mongodb.com
+
+# Log rotation
+mongodb_logrotate: true                             # Rotate mongodb logs.
+mongodb_logrotate_options:
+  - compress
+  - copytruncate
+  - daily
+  - dateext
+  - rotate 7
+  - size 10M
+
+# password for inter-process authentication
+# please regenerate this file on production environment with command 'openssl rand -base64 741'
+mongodb_keyfile_content: |
+  FhXUF+3WL33wWKegBKV7RCmer12L35+2IDh4vdCFIWy3wenbGXaBRvsfHFBveF6C
+  5HrvlANcYcDvhFxW8gfuAr5oqqmuWSOXLnk31WSdvtK3rzlIr/C8pBLULh6aZAgD
+  PRbohvTJSp7yZu22SG/S//IJnvfflnJCBmhN9cryjXhbA9IAV67iCDzqkQtbYyTi
+  bQeDNpbVWstFPy8+Omzk2Hd8r6twXzgZO0YvyQfNq03Moh4EUhs57zbpjng/FkYC
+  PVmYUaLCVTmQVn83W4s216PuV1FgPSX5T8MueI++s/0EZIEFZbkZlYhdTtQC+fG3
+  UKYcxZP0P1uDPWER7cTbxGcnj5ngQ6XhtM1AW11Y/boiRFt1SuPdgmoTgsR/JvOp
+  mGGONlyWLeJn5HUkoKRfvBhjP0pere0abc8KTCSbdGRP3J5Lx16Aub0aPh59uGdZ
+  wEpYEv+/g4F9zMXeS7BMqrfXt9Mvm2mcsFfsoKSIpv9iP1OYECoBdBwrhhEz7FoQ
+  pykhgsJMdAomuadOoMbMQM9czEpgk1kbLQdh4id8KxAhy9gvhzK68aAt1WDB/Y8b
+  mOKMGMrZutVKrbXasnJRZVetXUVKgoQDFiQ1CdJEAR0g6plpwdHiXMMuJKcsWig3
+  y5qbqs6nM3x9PSzvt0ax6vVpnfnjHGMPnN8k/ih9SvNkc52IghXt1ZGKKPB8IB/k
+  1AaXx2DbmgPB0wNXYMBrtToWHmvfMykVwPj2vvEL4YovnpUSfBRyb9EUf9Ojoe+E
+  7qCTxIXkUDKGBGEwtLxSef08N/UOOLaLo4LzdbtS+UvaOV1JiBz3QyTJROSkMF9L
+  9EtYRrkWy7Lrbkr7zR4U0Q4POeMCKpZMt8zuV/edRTxA3azo02+mUwHNZ1Oq2cvH
+  u2i4FIoWBx8PTecYmCg8EkivrK1TejhJRKDeS33MaYrECVk+chUb0qJQWYTbAtLM
+  SQ8wL8S/WfYojCHLogpIDpHCzl3m
+
+# names and passwords for administrative users
+mongodb_user_admin_name: siteUserAdmin
+mongodb_user_admin_password: passw0rd
+
+mongodb_root_admin_name: siteRootAdmin
+mongodb_root_admin_password: passw0rd

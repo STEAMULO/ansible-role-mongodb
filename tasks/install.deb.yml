@@ -20,13 +20,13 @@
   when: "'systemd' in systemd.stdout"
 
 - name: Add APT key
-  apt_key: url="{{mongodb_apt_key_url}}" id="{{mongodb_apt_key_id}}"
+  apt_key: keyserver="{{mongodb_apt_key_url}}" id="{{mongodb_apt_key_id}}"
 
 - name: Add APT repository
   apt_repository: repo="{{mongodb_repository}}" update_cache=yes
 
 - name: Install MongoDB package
-  apt: name={{item}} state=present
+  apt: name={{item}} state=latest update_cache=yes
   with_items:
     - "{{mongodb_package}}"
     - numactl
@@ -42,6 +42,10 @@
 - name: Install PyMongo package
   apt: pkg=python-pymongo state=latest
   when: not mongodb_pymongo_from_pip
+
+- name: Install PyMongo package
+  apt: pkg=python-pymongo state=absent
+  when: mongodb_pymongo_from_pip
 
 - name: Install PIP
   apt: pkg={{ item }}

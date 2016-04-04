@@ -16,43 +16,35 @@
   shell: "LC_ALL=C /usr/bin/mongod --config /etc/mongod.conf --fork"
   when: mongodb_manage_service == false and pidof_mongod.rc == 1
 
-- name: create administrative user siteUserAdmin
+- name: create administrative users
   mongodb_user:
-    database: admin
     name: "{{ item.name }}"
     password: "{{ item.password }}"
+    database: admin
+    login_database: admin
     roles: "{{ item.roles }}"
     login_port: "{{ mongodb_conf_port }}"
   with_items:
     - {
-      name: "{{ mongodb_user_admin_name }}",
-      password: "{{ mongodb_user_admin_password }}",
-      roles: "userAdminAnyDatabase"
+        name: "{{ mongodb_user_admin_name }}",
+        password: "{{ mongodb_user_admin_password }}",
+        roles: "userAdminAnyDatabase"
       }
-
-- name: create administrative user siteRootAdmin
-  mongodb_user:
-    database: admin
-    name: "{{ item.name }}"
-    password: "{{ item.password }}"
-    roles: "{{ item.roles }}"
-    login_port: "{{ mongodb_conf_port }}"
-  with_items:
     - {
-      name: "{{ mongodb_root_admin_name }}",
-      password: "{{ mongodb_root_admin_password }}",
-      roles: "root"
+        name: "{{ mongodb_root_admin_name }}",
+        password: "{{ mongodb_root_admin_password }}",
+        roles: "root"
       }
 
 - name: create normal users
   mongodb_user:
+    login_user: "{{ mongodb_user_admin_name }}"
+    login_password: "{{ mongodb_user_admin_password }}"
+    login_port: "{{ mongodb_conf_port }}"
     database: "{{ item.database }}"
-    login_database: admin
     name: "{{ item.name }}"
     password: "{{ item.password }}"
     roles: "{{ item.roles }}"
-    replica_set: "{{ mongodb_conf_replSet }}"
-    login_port: "{{ mongodb_conf_port }}"
   with_items:
     - "{{ mongodb_users }}"
   when: mongodb_users
